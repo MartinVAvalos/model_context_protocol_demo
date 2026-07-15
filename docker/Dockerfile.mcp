@@ -1,0 +1,42 @@
+# syntax=docker/dockerfile:1
+
+FROM python:3.12-slim AS base
+
+# Prevent Python from writing .pyc files and enable unbuffered logs
+ENV PYTHONDONTWRITEBYTECODE=1
+ENV PYTHONUNBUFFERED=1
+
+# Set working directory
+WORKDIR /app
+
+# Install system dependencies only if needed.
+# Keep this minimal for security and smaller image size.
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends \
+        ca-certificates \
+    && rm -rf /var/lib/apt/lists/*
+
+# Create a non-root user for security
+RUN useradd --create-home --shell /usr/sbin/nologin appuser
+
+# Copy dependency file first for better Docker layer caching
+COPY requirements.txt .
+
+# Install Python dependencies
+RUN pip install --no-cache-dir --upgrade pip \
+    && pip install --no-cache-dir -r requirements.txt
+
+# Copy application code
+COPY . .
+
+# Make sure app files are owned by the non-root user
+RUN chown -R appuser:appuser /app
+
+USER appuser
+
+# For stdio-based MCP servers, you usually do NOT expose a port.
+# For HTTP-based MCP servers, uncomment the EXPOSE line.
+# EXPOSE 8000
+
+# Default command for a stdio MCP server
+CMD ["python", "src/server.py"]

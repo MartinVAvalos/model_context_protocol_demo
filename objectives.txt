@@ -1,0 +1,2 @@
+- we already have a dockerfile for the mcp server, but create another for the database. I would like a sql-lite database
+- the sql-lite database should have: order_id, customer_id, order_date, gross_revenue, net_revenue, sales_channel. This is the foundation. add more fields if needed. Data will be used for data analysis, but this is for demonstration purposes so it doesnt need to be extensive.

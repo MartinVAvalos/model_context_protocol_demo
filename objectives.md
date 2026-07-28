@@ -1,0 +1,3 @@
+- create a copy of the BotChat both the frontend and the backend to interact with the ai
+- frontend should have the textbox for the user to input their prompt
+- backend should have and endpoint to send a request to the gemini api. this can possible be done via the asp.net core server 

@@ -1,0 +1,19 @@
+# .NET build outputs
+bin/
+obj/
+*.user
+
+# Visual Studio / Rider
+.vs/
+.idea/
+*.suo
+
+# Environment variables
+.env
+.env.*
+
+# IDE
+.vscode/
+
+# macOS
+.DS_Store

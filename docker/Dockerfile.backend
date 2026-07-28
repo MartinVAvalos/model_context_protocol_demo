@@ -4,12 +4,10 @@
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 
 WORKDIR /src
-
-# Restore dependencies separately so this layer is cached when only source changes.
-COPY src/*.csproj ./
+COPY backend/*.csproj ./
 RUN dotnet restore
 
-COPY src/ ./
+COPY backend/ ./
 RUN dotnet publish -c Release -o /app/publish --no-restore
 
 # ─── Runtime stage ─────────────────────────────────────────────────────────────
@@ -17,7 +15,7 @@ FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS runtime
 
 ENV DOTNET_NOLOGO=1 \
     DOTNET_CLI_TELEMETRY_OPTOUT=1 \
-    ASPNETCORE_URLS=http://+:5000
+    ASPNETCORE_URLS=http://+:8080
 
 WORKDIR /app
 
@@ -30,9 +28,7 @@ RUN groupadd --system appgroup \
         appuser
 
 COPY --from=build /app/publish ./
-COPY --chown=appuser:appgroup db/ ./db/
-
 USER appuser
 
-EXPOSE 5000
-CMD ["dotnet", "McpServer.dll"]
+EXPOSE 8080
+CMD ["dotnet", "ChatServer.dll"]

@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <RootNamespace>ChatServer</RootNamespace>
+    <AssemblyName>ChatServer</AssemblyName>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- MCP client — connects to the MCP server and calls its tools -->
+    <PackageReference Include="ModelContextProtocol" Version="1.4.1" />
+  </ItemGroup>
+
+</Project>

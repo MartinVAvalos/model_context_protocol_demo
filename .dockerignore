@@ -1,23 +1,22 @@
-__pycache__/
-*.pyc
-*.pyo
-*.pyd
-
-.env
-.venv/
-venv/
-
+# Version control
 .git/
 .gitignore
 
-.pytest_cache/
-.mypy_cache/
-.ruff_cache/
+# .NET build artefacts
+src/bin/
+src/obj/
 
-tests/
-docs/
+# Dev tooling
+Makefile
+*.md
 
-Dockerfile
-docker-compose.yml
+# IDE
+.vs/
+.idea/
+.vscode/
 
+# macOS
+.DS_Store
+
+# Logs
 *.log

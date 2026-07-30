@@ -3,6 +3,10 @@ bin/
 obj/
 *.user
 
+# Frontend dependencies and build output
+node_modules/
+dist/
+
 # Visual Studio / Rider
 .vs/
 .idea/
@@ -11,6 +15,9 @@ obj/
 # Environment variables
 .env
 .env.*
+
+# Keep an example environment file in Git
+!.env.example
 
 # IDE
 .vscode/

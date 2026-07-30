@@ -28,6 +28,7 @@ RUN groupadd --system appgroup \
         appuser
 
 COPY --from=build /app/publish ./
+COPY db ./db
 USER appuser
 
 EXPOSE 8080

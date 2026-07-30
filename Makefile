@@ -82,10 +82,11 @@ help:
 	@echo "  clean      Remove the MCP server image"
 	@echo ""
 	@echo "Chat app (BotChat copy):"
-	@echo "  chat-up    Build and start backend + frontend"
-	@echo "  chat-down  Stop the chat services"
-	@echo "  chat-build Build the chat images without starting"
-	@echo "  chat-logs  Stream logs for all chat services"
+	@echo "  chat-up       Build and start backend + frontend"
+	@echo "  chat-down     Stop the chat services"
+	@echo "  chat-build    Build the chat images without starting"
+	@echo "  chat-logs     Stream logs for all chat services"
+	@echo "  frontend-dev  Run the frontend locally with Vite"
 	@echo ""
 
 .DEFAULT_GOAL := help
@@ -94,7 +95,7 @@ help:
 DC           := docker compose
 COMPOSE_FILE := docker/docker-compose.yml
 
-.PHONY: chat-up chat-down chat-build chat-logs
+.PHONY: chat-up chat-down chat-build chat-logs frontend-dev
 
 ## Start the chat backend + frontend (builds images first)
 chat-up:
@@ -104,6 +105,10 @@ chat-up:
 	@echo "  Backend:  http://localhost:8080"
 	@echo ""
 	@echo "  Set GEMINI_API_KEY in .env before starting."
+
+## Run the frontend locally in Vite development mode
+frontend-dev:
+	cd frontend && npm install && npm run dev -- --host 0.0.0.0
 
 ## Stop the chat services
 chat-down:

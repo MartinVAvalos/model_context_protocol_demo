@@ -5,6 +5,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 builder.Services.AddHttpClient();
 builder.Services.AddSingleton<GeminiService>();
+builder.Services.AddSingleton<MovieCatalogService>();
 
 // Allow the Vite dev server (and any local origin) to call this API.
 builder.Services.AddCors(options =>

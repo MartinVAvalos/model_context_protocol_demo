@@ -11,6 +11,7 @@
   <ItemGroup>
     <!-- MCP client — connects to the MCP server and calls its tools -->
     <PackageReference Include="ModelContextProtocol" Version="1.4.1" />
+    <PackageReference Include="Microsoft.Data.Sqlite" Version="8.0.8" />
   </ItemGroup>
 
 </Project>

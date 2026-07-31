@@ -81,7 +81,7 @@ help:
 	@echo "  inspect    Test the MCP server with MCP Inspector"
 	@echo "  clean      Remove the MCP server image"
 	@echo ""
-	@echo "Chat app (BotChat copy):"
+	@echo "Chat app (MCP copy):"
 	@echo "  chat-up       Build and start backend + frontend"
 	@echo "  chat-down     Stop the chat services"
 	@echo "  chat-build    Build the chat images without starting"
@@ -91,7 +91,7 @@ help:
 
 .DEFAULT_GOAL := help
 
-# ─── Chat App (BotChat copy) ───────────────────────────────────────────────────
+# ─── Chat App (MCP copy) ───────────────────────────────────────────────────
 DC           := docker compose
 COMPOSE_FILE := docker/docker-compose.yml
 

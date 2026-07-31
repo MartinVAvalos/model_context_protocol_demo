@@ -28,7 +28,11 @@
             <span v-if="bannerExpanded" class="banner-details">This AI-powered MCP tool connects directly to company databases, allowing employees to ask questions about sales and business performance in plain language. Instead of writing SQL or waiting for a custom report, users can quickly explore trends, compare results, and uncover useful insights with minimal friction. It helps make data analysis faster, more accessible, and easier for nontechnical teams.</span>
           </transition>
           <button type="button" class="banner-toggle" @click="toggleBannerDetails">
-            {{ bannerExpanded ? 'Less' : 'More' }}
+            <img
+              src="@/assets/icons/more.svg"
+              alt="More"
+              class="banner-toggle-icon"
+            />
           </button>
       </div>
 
@@ -61,43 +65,44 @@
     </div>
 
     <div v-if="chatOpen" class="chat-panel">
+      <div class="chat-content">
+        <!-- Input pinned at the top of the panel -->
+        <form @submit.prevent="send" class="input-area">
+          <input
+            v-model="input"
+            ref="inputRef"
+            type="text"
+            placeholder="Ask about a movie…"
+            :disabled="loading"
+            class="message-input"
+            autocomplete="off"
+          />
+          <button
+            type="submit"
+            :disabled="loading || !input.trim()"
+            class="send-btn"
+            aria-label="Send message"
+          >
+            <span v-if="!loading" class="send-icon" aria-hidden="true" v-html="arrowIcon"></span>
+            <span v-else class="send-text">…</span>
+          </button>
+        </form>
 
-      <!-- Input pinned at the top of the panel -->
-      <form @submit.prevent="send" class="input-area">
-        <input
-          v-model="input"
-          ref="inputRef"
-          type="text"
-          placeholder="Ask about a movie…"
-          :disabled="loading"
-          class="message-input"
-          autocomplete="off"
-        />
-        <button
-          type="submit"
-          :disabled="loading || !input.trim()"
-          class="send-btn"
-          aria-label="Send message"
-        >
-          <span v-if="!loading" class="send-icon" aria-hidden="true" v-html="arrowIcon"></span>
-          <span v-else class="send-text">…</span>
-        </button>
-      </form>
-
-      <!-- Messages flow below the input -->
-      <div class="messages-container" ref="messagesRef">
-        <div
-          v-for="msg in messages"
-          :key="msg.id"
-          :class="['message-row', msg.role]"
-        >
-          <div class="bubble">
-            <pre class="bubble-text">{{ msg.text }}</pre>
+        <!-- Messages flow below the input -->
+        <div class="messages-container" ref="messagesRef">
+          <div
+            v-for="msg in messages"
+            :key="msg.id"
+            :class="['message-row', msg.role]"
+          >
+            <div class="bubble">
+              <pre class="bubble-text">{{ msg.text }}</pre>
+            </div>
           </div>
-        </div>
 
-        <div v-if="loading" class="message-row assistant">
-          <div class="bubble typing">Thinking…</div>
+          <div v-if="loading" class="message-row assistant">
+            <div class="bubble typing">Thinking…</div>
+          </div>
         </div>
       </div>
 
@@ -210,16 +215,12 @@ async function scrollToBottom() {
 @use '@/styles/variables.scss' as *;
 
 .banner {
-    // display: flex;
-    // flex-direction: column;
-    // align-items: center;
     gap: $spacing-sm;
     position: relative;
-  
-    
     margin: 4rem auto;
     padding: $spacing-lg;
     border-radius: 10px;
+    overflow: hidden;
 
     background-color: $color-primary;
     color: #fff;
@@ -228,7 +229,7 @@ async function scrollToBottom() {
 
     width: min(50rem, calc(100% - 2rem));
 
-    img {
+    .brand-icon {
       position: absolute;
       top: 10px;
       right: 10px;
@@ -244,22 +245,20 @@ async function scrollToBottom() {
 .banner-summary {
   margin: 0;
   margin-bottom: 10px;
-//   text-align: center;
 }
 
 .banner-details {
   display: block;
   overflow: hidden;
-//   text-align: center;
   line-height: 1.6;
 }
 
 .banner-toggle {
   padding: $spacing-xs $spacing-md;
   border: none;
-  border-radius: 10px;
-  background: $color-secondary;
-  color: #000;
+  border-radius: 7px;
+  background: $color-secondary-dark;
+  color: #fff;
   cursor: pointer;
   font-size: $font-size-sm;
   font-weight: $font-weight-semibold;
@@ -270,6 +269,12 @@ async function scrollToBottom() {
     transform: translateY(-1px);
     opacity: 0.9;
   }
+}
+
+.banner-toggle-icon {
+  width: 20px;
+  height: 20px;
+  display: block;
 }
 
 .banner-details-enter-active,
@@ -427,6 +432,12 @@ async function scrollToBottom() {
 }
 
 @media (max-width: 960px) {
+  .banner {
+    margin: 4rem 0;
+    width: 100%;
+    border-radius: 0;
+  }
+
   .movie-grid {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
@@ -534,15 +545,27 @@ async function scrollToBottom() {
   overflow: hidden;
 }
 
+.chat-content {
+  width: min(70rem, calc(100% - 2rem));
+  margin: 20px auto 0;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+}
+
 // ── Input (pinned at top of panel) ────────────────────────────────────
 
 .input-area {
   display: flex;
-  gap: $spacing-xs;
+  margin: 0;
   padding: $spacing-md;
+  gap: $spacing-xs;
   background: $color-secondary;
   border-bottom: 1px solid $color-tertiary;
   flex-shrink: 0;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .message-input {
@@ -613,12 +636,20 @@ async function scrollToBottom() {
 // ── Messages (scroll area below input) ───────────────────────────────
 
 .messages-container {
-  flex: 1;
-  overflow-y: auto;
-  padding: $spacing-md;
   display: flex;
   flex-direction: column;
+  flex: 1;
+  overflow-y: auto;
+  margin: 0;
+  padding: $spacing-md;
   gap: $spacing-sm;
+  width: 100%;
+  border: 8px solid #95E1D3;
+  border-top: 2px solid #95E1D3;
+  max-height: 800px;
+  border-radius: 0 0 15px 15px;
+  box-sizing: border-box;
+  min-height: 0;
 }
 
 .message-row {
@@ -657,7 +688,7 @@ async function scrollToBottom() {
 }
 
 .typing {
-  color: $color-text-muted;
+  // color: $color-text-muted;
   font-style: italic;
 }
 
@@ -670,5 +701,24 @@ async function scrollToBottom() {
   padding: $spacing-xs $spacing-md;
   font-size: $font-size-sm;
   flex-shrink: 0;
+}
+
+@media (max-width: 1250px) {
+  .chat-content {
+    width: 100%;
+    margin: 0;
+  }
+
+  .input-area,
+  .messages-container {
+    width: 100%;
+    margin: 0;
+  }
+
+  .messages-container {
+    height: 100%;
+    border-radius: 0;
+    max-height: unset;
+  }
 }
 </style>

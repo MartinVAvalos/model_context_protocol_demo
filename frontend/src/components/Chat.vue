@@ -77,8 +77,10 @@
           type="submit"
           :disabled="loading || !input.trim()"
           class="send-btn"
+          aria-label="Send message"
         >
-          {{ loading ? '…' : 'Send' }}
+          <span v-if="!loading" class="send-icon" aria-hidden="true" v-html="arrowIcon"></span>
+          <span v-else class="send-text">…</span>
         </button>
       </form>
 
@@ -108,6 +110,7 @@
 <script setup lang="ts">
 import { nextTick, onMounted, ref } from 'vue';
 import axios from 'axios';
+import arrowIcon from '@/assets/icons/navigation-arrow.svg?raw';
 
 const apiBase = import.meta.env.VITE_API_BASE || 'http://localhost:8080';
 
@@ -204,7 +207,7 @@ async function scrollToBottom() {
 </script>
 
 <style lang="scss" scoped>
-@import '@/styles/variables.scss';
+@use '@/styles/variables.scss' as *;
 
 .banner {
     // display: flex;
@@ -538,7 +541,7 @@ async function scrollToBottom() {
   gap: $spacing-xs;
   padding: $spacing-md;
   background: $color-secondary;
-  border-bottom: 1px solid $color-border-default;
+  border-bottom: 1px solid $color-tertiary;
   flex-shrink: 0;
 }
 
@@ -548,13 +551,15 @@ async function scrollToBottom() {
   border: 1px solid $color-border-default;
   border-radius: 8px;
   font-size: $font-size-base;
-  background: $color-tertiary;
+  background: #fff;
   color: $color-text-primary;
+  border-color: $color-tertiary;
   outline: none;
 
   &:focus {
-    border-color: $color-border-focus;
-    background: $color-primary;
+    box-shadow: 0px 0px 9px 0px $color-tertiary;
+    -webkit-box-shadow: 0px 0px 9px 0px $color-tertiary;
+    -moz-box-shadow: 0px 0px 9px 0px $color-tertiary;
   }
 
   &:disabled {
@@ -564,18 +569,45 @@ async function scrollToBottom() {
 }
 
 .send-btn {
-  padding: $spacing-sm $spacing-lg;
-  background: $color-brand-primary;
-  color: #fff;
-  border: none;
+  padding: $spacing-sm;
+  background: #fff;
+  color: $color-primary;
+  border: 2px solid $color-primary;
   border-radius: 8px;
   font-size: $font-size-base;
   font-weight: $font-weight-medium;
   cursor: pointer;
   transition: background 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: $spacing-xs;
 
   &:hover:not(:disabled) { background: $color-brand-hover; }
   &:disabled { opacity: 0.5; cursor: not-allowed; }
+}
+
+.send-icon {
+  height: 24px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 0;
+
+  :deep(svg) {
+    width: 100%;
+    height: 100%;
+    display: block;
+    fill: currentColor;
+  }
+
+  :deep(path) {
+    fill: currentColor;
+  }
+}
+
+.send-text {
+  font-size: 1.2rem;
 }
 
 // ── Messages (scroll area below input) ───────────────────────────────
@@ -602,18 +634,17 @@ async function scrollToBottom() {
   border-radius: 12px;
   font-size: $font-size-base;
   line-height: 1.5;
+  color: #fff;
+  border: 1px solid $color-tertiary;
 
   .user & {
-    background: $color-brand-primary;
-    color: #fff;
-    border-bottom-right-radius: 4px;
+    background: $color-secondary-dark;
+    border-bottom-right-radius: 0px;
   }
 
   .assistant & {
-    background: $color-secondary;
-    color: $color-text-primary;
-    border: 1px solid $color-border-default;
-    border-bottom-left-radius: 4px;
+    background: $color-primary;
+    border-bottom-left-radius: 0px;
   }
 }
 

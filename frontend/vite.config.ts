@@ -4,6 +4,13 @@ import path from 'path';
 
 export default defineConfig({
   plugins: [vue()],
+  css: {
+    preprocessorOptions: {
+      scss: {
+        api: 'modern-compiler',
+      },
+    },
+  },
   server: {
     host: '0.0.0.0',
     port: 5173,
